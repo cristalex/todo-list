@@ -1,0 +1,62 @@
+.btn {
+    @include btn-default();
+    min-width: 100px;
+    font-size: 1rem;
+    color: $color4;
+    padding: 0 0.5rem;
+    border-radius: $borderRadius;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $btnColor;
+    box-shadow: $shadow;
+
+    &--disabled {
+        pointer-events: none;
+        // cursor: not-allowed;
+        background-color: $btnColorDisabled;
+    }
+
+    &--icon {
+        min-width: 2rem;
+        height: 2rem;
+        background-color: transparent;
+        padding: 0;
+        box-shadow: none;
+
+        .material-design-icon {
+            width: 2rem;
+            height: 2rem;
+
+            > .material-design-icon__svg {
+                width: inherit;
+                height: inherit;
+
+            }
+        }
+    }
+
+    &--cancel {
+        text-decoration: none;
+        background-color: $color2;
+    }
+
+    @media screen and #{$up1440} {
+        transition: all 0.2s ease;
+
+        // &:not(.btn--disabled):hover {
+        //     background-color: darken($btnColor,7%);
+        // }
+        &:hover {
+            background-color: darken($btnColor,7%);
+        }
+        &--icon:hover {
+            background-color: transparent !important;
+            opacity: 0.7;
+        }
+        &--cancel:hover {
+            background-color: darken($color2,7%);
+        }
+    }
+}

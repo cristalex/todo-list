@@ -1,0 +1,115 @@
+.note {
+    &__field {
+        &-title {
+            display: block;
+            font-weight: 400;
+            cursor: default;
+            margin-bottom: 0.25rem;
+            margin-top: 0;
+            font-size: 1.25rem;
+        }
+
+        &-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .btn {
+                margin-left: 1rem;
+            }
+        }
+
+        &:not(:last-of-type) {
+            margin-bottom: 1rem;
+        }
+    }
+
+    &__btns {
+        display: flex;
+
+        .btn + .btn {
+            margin-left: 2rem;
+        }
+    }
+    
+    &__title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+
+    // &__text {
+    //     font-size: 1.5rem;
+    //     margin-bottom: 0.5rem;
+    //     margin-top: 0.5rem;
+    // }
+
+    &__item {
+        background-color: $color4;
+        border-radius: $borderRadius;
+        padding: 0.5rem 0.75rem;
+        box-shadow: $shadow;
+
+        &:not(:last-of-type) {
+            margin-bottom: 0.75rem;
+        }
+
+        &-inner {
+            display: flex;
+        }
+
+        &-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            width: 100%;
+            min-height: 2rem;
+            padding: calc( (1rem * 0.4 / 2) + 1px) 0.5rem 0;
+            transition: all 0.15s ease;
+
+            // &.is-completed {
+            //     @include is-completed();
+            // }
+        }
+        &-delete {
+            margin-top: 3px;
+            color: $colorDel;
+        }
+
+        &-edit {
+            margin-top: 3px;
+            color: $color2;
+        }
+
+        &-todos {
+            padding: 0 0.5rem;
+        }
+
+        &-todo {
+            display: flex;
+
+            // &::before {
+            //     content: "";
+            //     display: inline-block;
+            //     vertical-align: middle;
+            //     width: 5px;
+            //     height: 5px;
+            //     border-radius: 50%;
+            //     background-color: currentColor;
+            //     margin-right: 0.25em;
+            // }
+
+            &:not(:last-of-type) {
+                margin-bottom: 0.125rem;
+            }
+            
+            h3 {
+                font-weight: 400;
+
+                &.is-completed {
+                    @include is-completed();
+                }
+            }
+        }
+    }
+}

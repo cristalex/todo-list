@@ -1,0 +1,19 @@
+.input {
+    display: block;
+    width: 100%;
+    border: 1px solid lighten($color1,40%);
+    border-radius: $borderRadius;
+    height: 2.5rem;
+    padding: 3px 0.75rem;
+    transition: all 0.3s ease;
+    box-shadow: $shadow;
+    
+    &:focus {
+        border-color: $color2;
+    }
+
+    &--textarea {
+        height: 5rem;
+        padding: 0.75rem;
+    }
+}

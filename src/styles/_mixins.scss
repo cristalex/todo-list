@@ -1,0 +1,29 @@
+@mixin btn-default {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    
+    &:focus {
+      outline: none;
+    }
+}
+
+// @mixin one-line-text {
+//     white-space: nowrap;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+// }
+  
+// @mixin fix-ie-align-items {
+//     &::before{
+//         content:"";
+//         min-height:inherit;
+//         font-size:0;
+//     }
+// }
+
+@mixin is-completed {
+    text-decoration: line-through;
+    opacity: 0.5;
+}

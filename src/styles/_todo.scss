@@ -1,0 +1,49 @@
+.todo {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    &__title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+    // &__text {
+    //     font-size: 1.5rem;
+    //     margin-bottom: 0.5rem;
+    //     margin-top: 0.5rem;
+    // }
+    // &__list {
+
+    // }
+    &__item {
+        display: flex;
+        // align-items: center;
+        background-color: $color4;
+        border-radius: $borderRadius;
+        padding: 0.5rem 0.75rem;
+        box-shadow: $shadow;
+
+        &:not(:last-of-type) {
+            margin-bottom: 0.75rem;
+        }
+
+        &-title {
+            font-size: 1.25rem;
+            // @include one-line-text();
+            // display: flex;
+            // align-items: center;
+            width: 100%;
+            min-height: 2rem;
+            padding: calc( (1rem * 0.4 / 2) + 1px) 0.5rem 0;
+            transition: all 0.15s ease;
+
+            &.is-completed {
+                @include is-completed();
+            }
+        }
+        &-delete {
+            margin-top: 3px;
+        }
+    }
+}
