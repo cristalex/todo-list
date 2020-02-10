@@ -9,7 +9,7 @@
   </label>
 </template>
 <script>
-import CheckboxMarkedCircleIcon from "vue-material-design-icons/CheckboxMarkedCircle.vue";
+import CheckboxMarkedCircleIcon from "vue-material-design-icons/CheckboxMarkedCircle";
 
 export default {
   name: "TodoCompleted",

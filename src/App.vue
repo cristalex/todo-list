@@ -2,10 +2,10 @@
   <div id="app" class="app">
     <div class="app__content">
       <div class="container">
-        <div id="nav">
+        <!-- <div id="nav">
           <router-link :to="{ name: 'home' }">Home</router-link> |
           <router-link :to="{ name: 'note' }">Add note</router-link>
-        </div>
+        </div> -->
         <router-view />
       </div>
     </div>

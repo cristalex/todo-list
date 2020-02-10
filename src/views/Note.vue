@@ -78,7 +78,8 @@
           class="btn"
           :class="{ 'btn--disabled': !sendData.name }"
         >
-          Add note
+          <add-note-icon title="Add note" />
+          <span>Add note</span>
         </button>
         <router-link :to="{ name: 'home' }" class="btn btn--cancel">
           Cancel
@@ -93,13 +94,15 @@
 // import HelloWorld from "@/components/HelloWorld.vue";
 
 import { mapActions } from "vuex";
-import DeleteIcon from "vue-material-design-icons/Delete.vue";
+import DeleteIcon from "vue-material-design-icons/Delete";
+import AddNoteIcon from "vue-material-design-icons/ClipboardPlus";
 import TodoCompleted from "../components/TodoCompleted";
 
 export default {
   name: "Note",
   components: {
     DeleteIcon,
+    AddNoteIcon,
     TodoCompleted
   },
   data() {

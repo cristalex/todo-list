@@ -1,0 +1,87 @@
+.popup {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  // width: 0;
+  // height: 0;
+  z-index: 1000;
+  background-color: $popupBack;
+  // opacity: 0;
+  overflow-y: auto;
+  // transition: opacity .3s ease, visibility .3s ease;
+
+  &__wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    padding: 2rem 1rem;
+    z-index: 2;
+  }
+
+  &__content {
+    background-color: $color4;
+    min-height: 200px;
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    border-radius: $borderRadius;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  &__body {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  &__text {
+    font-size: 1.5rem;
+  }
+
+  &__close {
+    color: $color1;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.75rem;
+    
+    @media screen and #{$up1440} {
+      transition: color 0.15s ease;
+
+      &:hover {
+        color: $colorDel;
+      }
+    }
+  }
+
+  &__btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .btn {
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
+  }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0
+}

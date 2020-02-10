@@ -7,11 +7,15 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    notes: []
+    notes: [],
+    popup: null
   },
   getters: {
     GET_NOTES_LIST: state => {
       return state.notes;
+    },
+    GET_POPUP_STATE: state => {
+      return !!state.popup;
     }
   },
   mutations: {
@@ -20,6 +24,9 @@ export default new Vuex.Store({
     },
     REMOVE_NOTE: (state, payload) => {
       state.notes.splice(payload, 1);
+    },
+    SET_POPUP: (state, payload) => {
+      state.popup = payload;
     }
   },
   actions: {
@@ -29,10 +36,11 @@ export default new Vuex.Store({
       console.log("Note added to list!");
       setTimeout(() => {
         router.push({ name: "home" });
-      }, 1000);
+      }, 600);
     },
-    DELETE_NOTE: (context, payload) => {
-      context.commit("REMOVE_NOTE", payload);
+    DELETE_NOTE: context => {
+      context.commit("REMOVE_NOTE", context.state.popup.id);
+      context.commit("SET_POPUP", null);
       console.log("Note deleted from list!");
     }
   },

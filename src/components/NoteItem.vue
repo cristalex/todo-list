@@ -16,7 +16,7 @@
     <div class="note__item-todos" v-if="item.todos.length">
       <div
         class="note__item-todo"
-        v-for="(item, todoIndex) in getTodosShortList(item.todos, 3)"
+        v-for="(item, todoIndex) in getTodosShortList(item.todos)"
         :key="todoIndex"
       >
         <todo-completed
@@ -33,8 +33,9 @@
   </div>
 </template>
 <script>
-import DeleteIcon from "vue-material-design-icons/Delete.vue";
-import EditIcon from "vue-material-design-icons/Pencil.vue";
+import { SETTINGS } from "../settings";
+import DeleteIcon from "vue-material-design-icons/Delete";
+import EditIcon from "vue-material-design-icons/Pencil";
 import TodoCompleted from "../components/TodoCompleted";
 
 export default {
@@ -47,7 +48,7 @@ export default {
   props: {
     item: {
       type: Object,
-      required: true,
+      required: true
     }
   },
   // data() {
@@ -56,8 +57,8 @@ export default {
   //   }
   // }
   methods: {
-    getTodosShortList(data, count) {
-      return data.slice(0, count);
+    getTodosShortList(data) {
+      return data.slice(0, SETTINGS.NOTES_TODO_LIMIT);
     }
   }
 };

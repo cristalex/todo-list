@@ -1,5 +1,11 @@
 <template>
   <div class="home">
+    <div class="home__btns">
+      <router-link :to="{ name: 'note' }" class="btn btn--center">
+        <add-note-icon title="Add note" />
+        <span>Add note</span>
+      </router-link>
+    </div>
     <div class="note">
       <div class="note__title">Notes list</div>
       <div class="note__list" v-if="GET_NOTES_LIST.length">
@@ -7,8 +13,9 @@
           v-for="(noteItem, noteIndex) in GET_NOTES_LIST"
           :key="noteIndex"
           :item="noteItem"
-          @delNote="deleteNote(noteIndex)"
+          @delNote="confirmDeletion(noteIndex)"
         />
+        <!-- deleteNote(noteIndex) -->
         <!-- <div
           class="note__item"
           v-for="(noteItem, noteIndex) in GET_NOTES_LIST"
@@ -51,31 +58,55 @@
       </div>
       <div class="no-items-text" v-else>No notes added</div>
     </div>
+    <popup @confirm="deleteNote" :active="GET_POPUP_STATE" :item="settings.POPUP_DELETE_NOTE" />
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+// import { SETTINGS } from "../settings";
+import SettingsMixin from "../mixins/SettingsMixin";
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import AddNoteIcon from "vue-material-design-icons/ClipboardPlus";
 import NoteItem from "../components/NoteItem";
+import Popup from "../components/Popup";
 
 export default {
   name: "Home",
   components: {
-    NoteItem
+    AddNoteIcon,
+    NoteItem,
+    Popup
   },
-  // data() {
-  //   return {
-
-  //   };
-  // }
+  mixins: [SettingsMixin],
+  data() {
+    return {
+      popupData: {
+        text: "Confirm note deletion"
+      }
+    };
+  },
   computed: {
-    ...mapGetters(["GET_NOTES_LIST"])
+    ...mapGetters(["GET_NOTES_LIST", "GET_POPUP_STATE"])
   },
   methods: {
+    ...mapMutations(["SET_POPUP"]),
     ...mapActions(["DELETE_NOTE"]),
-    deleteNote(id) {
-      this.DELETE_NOTE(id);
+    deleteNote() {
+      this.DELETE_NOTE();
+    },
+    confirmDeletion(deleteId) {
+      console.log("Data id: ", deleteId);
+      this.SET_POPUP({
+        id: deleteId
+      });
     }
   }
 };
 </script>
+<style lang="scss">
+.home {
+  &__btns {
+    margin-bottom: 1rem;
+  }
+}
+</style>
