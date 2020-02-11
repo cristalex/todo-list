@@ -1,5 +1,6 @@
 <template>
   <section class="home">
+    <h1 class="home__title">Home</h1>
     <div class="home__btns">
       <router-link :to="{ name: 'note' }" class="btn btn--center">
         <add-note-icon title="Add note" />
@@ -51,10 +52,3 @@ export default {
   }
 };
 </script>
-<style lang="scss">
-.home {
-  &__btns {
-    margin-bottom: 1rem;
-  }
-}
-</style>

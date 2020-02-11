@@ -1,5 +1,5 @@
 <template>
-  <div class="note__item">
+  <article class="note__item">
     <div class="note__item-inner">
       <span class="note__item-title">{{ item.name }}</span>
       <button
@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="no-items-text" v-else>No todos added</div>
-  </div>
+  </article>
 </template>
 <script>
 import { SETTINGS } from "../settings";
@@ -62,13 +62,13 @@ export default {
   },
   methods: {
     ...mapMutations(["SET_EDIT_MODE"]),
+    // Display the specified number of list items
     getTodosShortList(data) {
       return data.slice(0, SETTINGS.NOTES_TODO_LIMIT);
     },
+    // Go to edit note
     editNoteItem(id) {
       this.SET_EDIT_MODE(id);
-      // console.log("ID: ", id);
-      // this.$router.push({ name: "note", params: { id: id } });
     }
   }
 };

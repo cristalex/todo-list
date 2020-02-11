@@ -10,11 +10,6 @@ html {
     font-size: $fontSize;
 }
 
-img {
-    max-width: 100%;
-    height: auto;
-}
-
 button {
     &:focus {
         outline: none;
@@ -32,22 +27,32 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(180deg,#3cf0b7,#a17fdf);
+    background: linear-gradient(180deg,#acf1db,#928d92);
+    padding: 0 1rem;
+
+    @media screen and #{$up768} {
+      padding: 0;
+    }
 
     &__content {
         background: #ededed;
-        padding: 1rem;
+        padding: 1rem 1rem 2rem;
         border-radius: $borderRadius;
         box-shadow: 0 0 30px -5px $color1;
         margin: 1rem auto;
         width: 100%;
         max-width: 600px;
         min-height: 400px;
+
+        // @media screen and #{$up768} {
+        //   margin-left: 1rem;
+        //   margin-right: 1rem;
+        // }
     }
 }
 
 .container {
-    padding: 0 1rem;
+    padding: 0;
     flex-grow: 1;
     margin: 0 auto;
     position: relative;
@@ -65,10 +70,25 @@ button {
     @media screen and #{$up1024} {
         max-width: 960px;
     }
+
+    @media screen and #{$up768} {
+      padding: 0 1rem;
+    }
 }
 
 .no-items-text {
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
     margin-top: 0.5rem;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0
+}
+
+[v-cloak] {
+  display: none;
 }

@@ -72,14 +72,15 @@ export default {
     };
   },
   methods: {
+    // Enable editing mode of todo
     async enableEdit(id) {
       this.editId = id;
-      // this.localContent = JSON.parse(JSON.stringify(this.sendData.todos[id]));
       this.localContent = this.item.name;
       this.isEditing = true;
       await this.$nextTick();
       this.$refs.editInput.focus();
     },
+    // Save new content in current todo
     saveEdit() {
       if (this.localContent) {
         this.$emit("updateTodo", {
@@ -89,6 +90,7 @@ export default {
       }
       this.stopEdit();
     },
+    // Cancel editing the current item
     stopEdit() {
       this.isEditing = false;
       this.contentLocal = "";

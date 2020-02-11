@@ -8,9 +8,6 @@ const SETTINGS = {
   POPUP_CANCEL_NOTE: {
     text: "Do you want to discard changes to the note?"
   }
-  // POPUP_DELETE_TODO: {
-  //   text: "Do you want to delete this todo?"
-  // }
 };
 
 export { SETTINGS };

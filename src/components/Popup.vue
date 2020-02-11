@@ -50,6 +50,7 @@ export default {
   },
   methods: {
     ...mapMutations(["SET_POPUP"]),
+    // Close popup
     closePopup() {
       this.SET_POPUP(null);
     }

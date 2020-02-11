@@ -20,8 +20,13 @@
     }
 
     &--fs-big {
-        height: auto;
-        max-height: 8rem;
-        font-size: 1.25rem;
+        height: 8rem;
+        font-size: 1rem;
+
+        @media screen and #{$up1024} {
+            height: auto;
+            max-height: 8rem;
+            font-size: 1.25rem;
+        }
     }
 }

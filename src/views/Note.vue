@@ -1,16 +1,17 @@
 <template>
   <section class="note">
-    <!-- <img alt="Vue logo" src="../assets/logo.png" /> -->
+    <h1 class="home__title">Note</h1>
     <form action="">
       <fieldset class="note__field">
-        <h2 class="note__field-title">Note title</h2>
+        <h2 class="note__field-title">Note title:</h2>
         <input
           type="text"
           name="note_name"
-          v-model="sendData.name"
+          v-model="noteData.name"
           class="input"
           placeholder="Enter note title"
           :maxlength="settings.MAX_NOTE_LENGTH"
+          autocomplete="off"
         />
       </fieldset>
       <fieldset class="note__field">
@@ -36,28 +37,13 @@
           </button>
         </div>
       </fieldset>
-      <div class="todo">
-        <h1 class="todo__title">Todos list</h1>
-        <div class="todo__list" v-if="sendData.todos.length">
-          <todo-item
-            v-for="(singleTodo, todoIndex) in sendData.todos"
-            :key="todoIndex"
-            :item="singleTodo"
-            :id="todoIndex"
-            @successTodo="changeSuccessTodo(todoIndex)"
-            @deleteTodo="deleteTodo(todoIndex)"
-            @updateTodo="updateTodo"
-          />
-        </div>
-        <div class="no-items-text" v-else>No todos added</div>
-      </div>
       <div class="note__btns">
         <button
           type="button"
-          :disabled="!sendData.name"
+          :disabled="!noteData.name"
           @click="sendDataNote()"
           class="btn"
-          :class="{ 'btn--disabled': !sendData.name }"
+          :class="{ 'btn--disabled': !noteData.name }"
         >
           <add-note-icon
             :title="GET_EDITMODE_STATE ? 'Update note' : 'Add note'"
@@ -95,6 +81,7 @@
           class="btn"
           v-show="GET_EDITMODE_STATE && isNoteChanged"
           @click="undoNoteChanges()"
+          v-cloak
         >
           <undo-icon title="Undo last changes" />
           <span>Undo</span>
@@ -102,12 +89,28 @@
         <button
           type="button"
           class="btn"
-          v-show="GET_EDITMODE_STATE && backupCopy"
+          v-show="GET_EDITMODE_STATE && redoCopy"
           @click="redoNoteChanges()"
+          v-cloak
         >
           <redo-icon title="Redo last changes" />
           <span>Redo</span>
         </button>
+      </div>
+      <div class="todo">
+        <h2 class="todo__title">Todos list</h2>
+        <div class="todo__list" v-if="noteData.todos.length">
+          <todo-item
+            v-for="(singleTodo, todoIndex) in noteData.todos"
+            :key="todoIndex"
+            :item="singleTodo"
+            :id="todoIndex"
+            @successTodo="changeSuccessTodo(todoIndex)"
+            @deleteTodo="deleteTodo(todoIndex)"
+            @updateTodo="updateTodo"
+          />
+        </div>
+        <div class="no-items-text" v-else>No todos added</div>
       </div>
     </form>
     <popup
@@ -119,8 +122,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from "@/components/HelloWorld.vue";
 import { SETTINGS } from "../settings";
 import SettingsMixin from "../mixins/SettingsMixin";
 import NoteMixin from "../mixins/NoteMixin";
@@ -151,86 +152,99 @@ export default {
         name: "",
         success: false
       },
-      sendData: {
+      noteData: {
         name: "",
         todos: []
       },
       cancelPopupState: false,
       startCopy: null,
-      backupCopy: null
+      redoCopy: null
     };
   },
   computed: {
     ...mapGetters(["GET_EDITMODE_STATE"]),
+    // Item selection (for popup) based on value of cancelPopupState
     popupItem() {
       return this.cancelPopupState
         ? SETTINGS.POPUP_CANCEL_NOTE
         : SETTINGS.POPUP_DELETE_NOTE;
     },
+    // True if a note has been modified
     isNoteChanged() {
-      return this.startCopy !== JSON.stringify(this.sendData);
+      return this.startCopy !== JSON.stringify(this.noteData);
     }
   },
   mounted() {
-    // console.log(this.$route.params.id, this.GET_NOTES_LIST[this.$route.params.id]);
-    // console.log(this.GET_EDITMODE_STATE);
+    // Init states if Edit mode of note is selected
     if (this.GET_EDITMODE_STATE) {
-      // this.sendData = this.GET_NOTES_LIST[this.$route.params.id];
-      this.sendData = JSON.parse(
+      this.noteData = JSON.parse(
         JSON.stringify(this.GET_NOTES_LIST[this.$route.params.id])
       );
       this.startCopy = JSON.stringify(
         this.GET_NOTES_LIST[this.$route.params.id]
       );
-      // console.log(this.startCopy);
     }
   },
   methods: {
     ...mapMutations(["UNSET_EDIT_MODE"]),
     ...mapActions(["SAVE_NOTE"]),
+    // Add new todo in Todo List and clear
     addTodo() {
-      this.sendData.todos.push(this.currentTodo);
+      this.noteData.todos.push(this.currentTodo);
+      this.clearTodoData();
+    },
+    // Change success todo status
+    changeSuccessTodo(id) {
+      this.noteData.todos[id].success = !this.noteData.todos[id].success;
+    },
+    // Delete single todo from note
+    deleteTodo(id) {
+      this.noteData.todos.splice(id, 1);
+    },
+    // Update todo description
+    updateTodo(data) {
+      this.noteData.todos[data.id].name = data.name;
+    },
+    // Clear todo data
+    clearTodoData() {
       this.currentTodo = {
         name: "",
         success: false
       };
     },
-    changeSuccessTodo(id) {
-      // console.log(this.sendData.todos[id]);
-      this.sendData.todos[id].success = !this.sendData.todos[id].success;
-    },
-    deleteTodo(id) {
-      this.sendData.todos.splice(id, 1);
-    },
-    updateTodo(data) {
-      this.sendData.todos[data.id].name = data.name;
-    },
-    clearTodosList() {
-      this.sendData = {
+    // Clear note data
+    clearNoteData() {
+      this.noteData = {
         name: "",
         todos: []
       };
     },
+    // Save note name and todo list to new note
     sendDataNote() {
+      // Save todo in todo list if todo field not empty
       if (this.currentTodo.name) {
         this.addTodo();
       }
-      this.SAVE_NOTE(this.sendData);
-      this.clearTodosList();
+      this.SAVE_NOTE(this.noteData);
+      this.clearNoteData();
     },
+    // Cancel changes of current note
     cancelNoteChanges() {
       this.UNSET_EDIT_MODE();
       this.SET_POPUP(null);
       this.$router.push({ name: "home" });
     },
+    // Undo changes in current note
     undoNoteChanges() {
-      this.backupCopy = JSON.stringify(this.sendData);
-      this.sendData = JSON.parse(this.startCopy);
+      this.redoCopy = JSON.stringify(this.noteData);
+      this.noteData = JSON.parse(this.startCopy);
     },
+    // Redo again changes in current nore
     redoNoteChanges() {
-      this.sendData = JSON.parse(this.backupCopy);
-      this.backupCopy = null;
+      this.noteData = JSON.parse(this.redoCopy);
+      this.redoCopy = null;
     },
+    // Confirm action in popup: Cancel note changes or delete note
     confirmAction() {
       if (this.cancelPopupState) {
         this.cancelNoteChanges();
