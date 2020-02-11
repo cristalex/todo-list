@@ -79,15 +79,35 @@
           v-show="GET_EDITMODE_STATE"
           @click="confirmCancelation()"
         >
-          Cancel
+          <cancel-icon title="Cancel changes" />
+          <span>Cancel</span>
         </button>
         <router-link
           :to="{ name: 'home' }"
           class="btn btn--cancel"
           v-show="!GET_EDITMODE_STATE"
         >
-          Cancel
+          <cancel-icon title="Cancel changes" />
+          <span>Cancel</span>
         </router-link>
+        <button
+          type="button"
+          class="btn"
+          v-show="GET_EDITMODE_STATE && isNoteChanged"
+          @click="undoNoteChanges()"
+        >
+          <undo-icon title="Undo last changes" />
+          <span>Undo</span>
+        </button>
+        <button
+          type="button"
+          class="btn"
+          v-show="GET_EDITMODE_STATE && backupCopy"
+          @click="redoNoteChanges()"
+        >
+          <redo-icon title="Redo last changes" />
+          <span>Redo</span>
+        </button>
       </div>
     </form>
     <popup
@@ -107,6 +127,9 @@ import NoteMixin from "../mixins/NoteMixin";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import DeleteIcon from "vue-material-design-icons/Delete";
 import AddNoteIcon from "vue-material-design-icons/ClipboardPlus";
+import UndoIcon from "vue-material-design-icons/Undo";
+import RedoIcon from "vue-material-design-icons/Redo";
+import CancelIcon from "vue-material-design-icons/Cancel";
 import TodoItem from "../components/TodoItem";
 import Popup from "../components/Popup";
 
@@ -115,7 +138,10 @@ export default {
   components: {
     DeleteIcon,
     AddNoteIcon,
+    UndoIcon,
+    RedoIcon,
     TodoItem,
+    CancelIcon,
     Popup
   },
   mixins: [SettingsMixin, NoteMixin],
@@ -130,7 +156,8 @@ export default {
         todos: []
       },
       cancelPopupState: false,
-      startCopy: null
+      startCopy: null,
+      backupCopy: null
     };
   },
   computed: {
@@ -139,6 +166,9 @@ export default {
       return this.cancelPopupState
         ? SETTINGS.POPUP_CANCEL_NOTE
         : SETTINGS.POPUP_DELETE_NOTE;
+    },
+    isNoteChanged() {
+      return this.startCopy !== JSON.stringify(this.sendData);
     }
   },
   mounted() {
@@ -149,8 +179,10 @@ export default {
       this.sendData = JSON.parse(
         JSON.stringify(this.GET_NOTES_LIST[this.$route.params.id])
       );
-      this.startCopy = JSON.stringify(this.GET_NOTES_LIST[this.$route.params.id]);
-      console.log(this.startCopy);
+      this.startCopy = JSON.stringify(
+        this.GET_NOTES_LIST[this.$route.params.id]
+      );
+      // console.log(this.startCopy);
     }
   },
   methods: {
@@ -190,6 +222,14 @@ export default {
       this.UNSET_EDIT_MODE();
       this.SET_POPUP(null);
       this.$router.push({ name: "home" });
+    },
+    undoNoteChanges() {
+      this.backupCopy = JSON.stringify(this.sendData);
+      this.sendData = JSON.parse(this.startCopy);
+    },
+    redoNoteChanges() {
+      this.sendData = JSON.parse(this.backupCopy);
+      this.backupCopy = null;
     },
     confirmAction() {
       if (this.cancelPopupState) {

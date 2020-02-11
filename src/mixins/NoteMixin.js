@@ -13,7 +13,7 @@ export default {
       }
     },
     confirmDeletion(deleteId) {
-      // console.log("Data id: ", deleteId);
+      this.cancelPopupState = false;
       this.SET_POPUP({
         id: deleteId
       });
