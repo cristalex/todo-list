@@ -28,15 +28,20 @@
             margin-bottom: 0.75rem;
         }
 
+        &-wrap {
+            width: 100%;
+            min-height: 2rem;
+            padding: calc( (1rem * 0.4 / 2) + 1px) 0.5rem;
+        }
+
         &-title {
+            display: block;
             font-size: 1.25rem;
             // @include one-line-text();
             // display: flex;
             // align-items: center;
-            width: 100%;
-            min-height: 2rem;
-            padding: calc( (1rem * 0.4 / 2) + 1px) 0.5rem 0;
             transition: all 0.15s ease;
+            cursor: text;
 
             &.is-completed {
                 @include is-completed();
@@ -46,5 +51,8 @@
             margin-top: 3px;
             color: $colorDel;
         }
+    }
+    &__btns {
+        display: flex;
     }
 }

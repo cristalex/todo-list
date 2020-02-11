@@ -1,5 +1,6 @@
 .input {
     display: block;
+    font-family: $fontFam;
     width: 100%;
     border: 1px solid lighten($color1,40%);
     border-radius: $borderRadius;
@@ -15,5 +16,12 @@
     &--textarea {
         height: 5rem;
         padding: 0.75rem;
+        overflow-y: auto;
+    }
+
+    &--fs-big {
+        height: auto;
+        max-height: 8rem;
+        font-size: 1.25rem;
     }
 }

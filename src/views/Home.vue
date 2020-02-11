@@ -47,7 +47,7 @@ export default {
     this.UNSET_EDIT_MODE();
   },
   methods: {
-    ...mapMutations(["UNSET_EDIT_MODE"]),
+    ...mapMutations(["UNSET_EDIT_MODE"])
   }
 };
 </script>

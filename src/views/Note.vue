@@ -10,25 +10,19 @@
           v-model="sendData.name"
           class="input"
           placeholder="Enter note title"
+          :maxlength="settings.MAX_NOTE_LENGTH"
         />
       </fieldset>
       <fieldset class="note__field">
         <h2 class="note__field-title">Add todo items:</h2>
         <div class="note__field-wrap">
-          <!-- <input
-            type="text"
-            name="todo_name"
-            v-model="currentTodo.name"
-            @keyup.enter="addTodo()"
-            class="input"
-            placeholder="Enter todo description"
-          /> -->
           <textarea
             name="todo_name"
             v-model="currentTodo.name"
             @keyup.enter="addTodo()"
             class="input input--textarea"
             placeholder="Enter todo description"
+            :maxlength="settings.MAX_TODO_LENGTH"
           >
           </textarea>
           <button
@@ -45,28 +39,15 @@
       <div class="todo">
         <h1 class="todo__title">Todos list</h1>
         <div class="todo__list" v-if="sendData.todos.length">
-          <div
-            class="todo__item"
-            v-for="(singleTodo, index) in sendData.todos"
-            :key="index"
-          >
-            <todo-completed
-              @success="changeSuccessTodo(index)"
-              :value="singleTodo.success"
-            />
-            <span
-              class="todo__item-title"
-              :class="{ 'is-completed': singleTodo.success }"
-              >{{ singleTodo.name }}</span
-            >
-            <button
-              type="button"
-              @click="deleteTodo(index)"
-              class="btn btn--icon todo__item-delete"
-            >
-              <delete-icon title="Delete this note" />
-            </button>
-          </div>
+          <todo-item
+            v-for="(singleTodo, todoIndex) in sendData.todos"
+            :key="todoIndex"
+            :item="singleTodo"
+            :id="todoIndex"
+            @successTodo="changeSuccessTodo(todoIndex)"
+            @deleteTodo="deleteTodo(todoIndex)"
+            @updateTodo="updateTodo"
+          />
         </div>
         <div class="no-items-text" v-else>No todos added</div>
       </div>
@@ -114,11 +95,6 @@
       :active="GET_POPUP_STATE || (GET_POPUP_STATE && cancelPopupState)"
       :item="popupItem"
     />
-    <!-- <popup
-      @confirm="deleteNote"
-      :active="GET_POPUP_STATE"
-      :item="settings.POPUP_CANCEL_NOTE"
-    /> -->
   </section>
 </template>
 
@@ -131,7 +107,7 @@ import NoteMixin from "../mixins/NoteMixin";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import DeleteIcon from "vue-material-design-icons/Delete";
 import AddNoteIcon from "vue-material-design-icons/ClipboardPlus";
-import TodoCompleted from "../components/TodoCompleted";
+import TodoItem from "../components/TodoItem";
 import Popup from "../components/Popup";
 
 export default {
@@ -139,7 +115,7 @@ export default {
   components: {
     DeleteIcon,
     AddNoteIcon,
-    TodoCompleted,
+    TodoItem,
     Popup
   },
   mixins: [SettingsMixin, NoteMixin],
@@ -153,7 +129,8 @@ export default {
         name: "",
         todos: []
       },
-      cancelPopupState: false
+      cancelPopupState: false,
+      startCopy: null
     };
   },
   computed: {
@@ -172,6 +149,8 @@ export default {
       this.sendData = JSON.parse(
         JSON.stringify(this.GET_NOTES_LIST[this.$route.params.id])
       );
+      this.startCopy = JSON.stringify(this.GET_NOTES_LIST[this.$route.params.id]);
+      console.log(this.startCopy);
     }
   },
   methods: {
@@ -190,6 +169,9 @@ export default {
     },
     deleteTodo(id) {
       this.sendData.todos.splice(id, 1);
+    },
+    updateTodo(data) {
+      this.sendData.todos[data.id].name = data.name;
     },
     clearTodosList() {
       this.sendData = {
