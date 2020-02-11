@@ -51,6 +51,7 @@ export default {
   methods: {
     ...mapMutations(["SET_POPUP"]),
     closePopup() {
+      console.log("test");
       this.SET_POPUP(null);
     }
   }

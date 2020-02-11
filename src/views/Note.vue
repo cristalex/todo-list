@@ -78,33 +78,71 @@
           class="btn"
           :class="{ 'btn--disabled': !sendData.name }"
         >
-          <add-note-icon title="Add note" />
-          <span>Add note</span>
+          <add-note-icon
+            :title="GET_EDITMODE_STATE ? 'Update note' : 'Add note'"
+          />
+          <span>{{ GET_EDITMODE_STATE ? "Update note" : "Add note" }}</span>
         </button>
-        <router-link :to="{ name: 'home' }" class="btn btn--cancel">
+        <button
+          type="button"
+          @click="confirmDeletion($route.params.id)"
+          class="btn btn--delete"
+          v-show="GET_EDITMODE_STATE"
+        >
+          <delete-icon title="Delete this note" />
+          <span>Delete note</span>
+        </button>
+        <button
+          type="button"
+          class="btn btn--cancel"
+          v-show="GET_EDITMODE_STATE"
+          @click="confirmCancelation()"
+        >
+          Cancel
+        </button>
+        <router-link
+          :to="{ name: 'home' }"
+          class="btn btn--cancel"
+          v-show="!GET_EDITMODE_STATE"
+        >
           Cancel
         </router-link>
       </div>
     </form>
+    <popup
+      @confirm="confirmAction()"
+      :active="GET_POPUP_STATE || (GET_POPUP_STATE && cancelPopupState)"
+      :item="popupItem"
+    />
+    <!-- <popup
+      @confirm="deleteNote"
+      :active="GET_POPUP_STATE"
+      :item="settings.POPUP_CANCEL_NOTE"
+    /> -->
   </section>
 </template>
 
 <script>
 // @ is an alias to /src
 // import HelloWorld from "@/components/HelloWorld.vue";
-
-import { mapActions } from "vuex";
+import { SETTINGS } from "../settings";
+import SettingsMixin from "../mixins/SettingsMixin";
+import NoteMixin from "../mixins/NoteMixin";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import DeleteIcon from "vue-material-design-icons/Delete";
 import AddNoteIcon from "vue-material-design-icons/ClipboardPlus";
 import TodoCompleted from "../components/TodoCompleted";
+import Popup from "../components/Popup";
 
 export default {
   name: "Note",
   components: {
     DeleteIcon,
     AddNoteIcon,
-    TodoCompleted
+    TodoCompleted,
+    Popup
   },
+  mixins: [SettingsMixin, NoteMixin],
   data() {
     return {
       currentTodo: {
@@ -114,12 +152,31 @@ export default {
       sendData: {
         name: "",
         todos: []
-      }
+      },
+      cancelPopupState: false
     };
   },
+  computed: {
+    ...mapGetters(["GET_EDITMODE_STATE"]),
+    popupItem() {
+      return this.cancelPopupState
+        ? SETTINGS.POPUP_CANCEL_NOTE
+        : SETTINGS.POPUP_DELETE_NOTE;
+    }
+  },
+  mounted() {
+    // console.log(this.$route.params.id, this.GET_NOTES_LIST[this.$route.params.id]);
+    // console.log(this.GET_EDITMODE_STATE);
+    if (this.GET_EDITMODE_STATE) {
+      // this.sendData = this.GET_NOTES_LIST[this.$route.params.id];
+      this.sendData = JSON.parse(
+        JSON.stringify(this.GET_NOTES_LIST[this.$route.params.id])
+      );
+    }
+  },
   methods: {
+    ...mapMutations(["UNSET_EDIT_MODE"]),
     ...mapActions(["SAVE_NOTE"]),
-
     addTodo() {
       this.sendData.todos.push(this.currentTodo);
       this.currentTodo = {
@@ -146,6 +203,18 @@ export default {
       }
       this.SAVE_NOTE(this.sendData);
       this.clearTodosList();
+    },
+    cancelNoteChanges() {
+      this.UNSET_EDIT_MODE();
+      this.SET_POPUP(null);
+      this.$router.push({ name: "home" });
+    },
+    confirmAction() {
+      if (this.cancelPopupState) {
+        this.cancelNoteChanges();
+      } else {
+        this.deleteNote();
+      }
     }
   }
 };

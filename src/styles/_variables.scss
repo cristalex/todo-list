@@ -7,8 +7,10 @@ $color3: #25a565;
 $color4: #ffffff;
 
 $colorDel: #ec0101;
+$colorDelHover: lighten($colorDel,7%);
 
 $btnColor: #6200ee;
+$btnColorHover: darken($btnColor,7%);
 $btnColorDisabled: #afadad;
 
 $popupBack: rgba($color1,0.6);

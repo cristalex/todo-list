@@ -12,9 +12,10 @@ const routes = [
     component: Home
   },
   {
-    path: "/note",
+    path: "/note/:id?",
     name: "note",
-    component: Note
+    component: Note,
+    props: true
   }
   // {
   //   path: "/about",

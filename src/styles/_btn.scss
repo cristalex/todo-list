@@ -50,6 +50,11 @@
         background-color: $colorDel;
     }
 
+    &--delete {
+        text-decoration: none;
+        background-color: $colorDel;
+    }
+
     &--center {
         margin-left: auto;
         margin-right: auto;
@@ -63,14 +68,17 @@
         //     background-color: darken($btnColor,7%);
         // }
         &:hover {
-            background-color: darken($btnColor,7%);
+            background-color: $btnColorHover;
         }
         &--icon:hover {
             background-color: transparent !important;
             opacity: 0.7;
         }
         &--cancel:hover {
-            background-color: lighten($colorDel,7%);
+            background-color: $colorDelHover;
+        }
+        &--delete:hover {
+            background-color: $colorDelHover;
         }
     }
 }

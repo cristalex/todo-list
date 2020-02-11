@@ -2,7 +2,11 @@
   <div class="note__item">
     <div class="note__item-inner">
       <span class="note__item-title">{{ item.name }}</span>
-      <button type="button" class="btn btn--icon note__item-edit">
+      <button
+        type="button"
+        class="btn btn--icon note__item-edit"
+        @click="editNoteItem(id)"
+      >
         <edit-icon title="Edit this note" />
       </button>
       <button
@@ -34,6 +38,7 @@
 </template>
 <script>
 import { SETTINGS } from "../settings";
+import { mapMutations } from "vuex";
 import DeleteIcon from "vue-material-design-icons/Delete";
 import EditIcon from "vue-material-design-icons/Pencil";
 import TodoCompleted from "../components/TodoCompleted";
@@ -49,16 +54,21 @@ export default {
     item: {
       type: Object,
       required: true
+    },
+    id: {
+      type: Number,
+      required: true
     }
   },
-  // data() {
-  //   return {
-
-  //   }
-  // }
   methods: {
+    ...mapMutations(["SET_EDIT_MODE"]),
     getTodosShortList(data) {
       return data.slice(0, SETTINGS.NOTES_TODO_LIMIT);
+    },
+    editNoteItem(id) {
+      this.SET_EDIT_MODE(id);
+      // console.log("ID: ", id);
+      // this.$router.push({ name: "note", params: { id: id } });
     }
   }
 };
